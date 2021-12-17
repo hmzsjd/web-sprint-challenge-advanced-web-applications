@@ -1,12 +1,73 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useState } from 'react';
+import { useHistory } from 'react-router';
+import axios from 'axios';
+import PrivateRoute from './PrivateRoute';
+
 
 const Login = () => {
+
+    const initialFormValues = {
+        username: "",
+        password: ""
+    }
+
+    const { push } = useHistory();
+
+    const [formValues, setFormValues] = useState(initialFormValues);
+    const [loginError, setLoginError] = useState(false);
+
+
+    const handleChange = (e) => {
+        setFormValues({
+            ...formValues,
+            [e.target.name]: e.target.value
+        })
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formValues);
+
+        axios.post('http://localhost:5000/api/login', formValues)
+            .then(resp => {
+                console.log(resp.data.token);
+                localStorage.setItem('token', resp.data.token);
+                setLoginError(false);
+                push('/view');
+            })
+            .catch(err => {
+                console.log({err});
+                setLoginError(true);
+            })
+    }
     
     return(<ComponentContainer>
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
+
+            <form onSubmit={handleSubmit}>
+                <label>Username</label>
+                <input 
+                id="username" 
+                type="text" 
+                name="username" 
+                value={formValues.username} 
+                onChange={handleChange}/>
+
+                <label>Password</label>
+                <input 
+                id="password" 
+                type="password" 
+                name="password" 
+                value={formValues.password} 
+                onChange={handleChange} />
+                <br></br> <br></br>
+                { loginError && <p id="error">Invalid login credentials.</p>}
+                <button id="submit">Login</button>
+            </form>
         </ModalContainer>
     </ComponentContainer>);
 }
