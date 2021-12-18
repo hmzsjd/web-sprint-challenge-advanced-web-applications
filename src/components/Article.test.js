@@ -8,33 +8,29 @@ import {render, screen} from "@testing-library/react";
 import Article from './Article';
 
 const testArticle = {
-    id: 12345,
     headline: "LOREM IPSUM",
     createdOn: Date.now(),
     author:"LOREM",
-    image: 1,
     summary: "LIDSA",
     body: "LOREM IPSUM DOLOR SIT AMET"   
 };
 
 
 const noAuth = {
-    id: 12345,
     headline: "LOREM IPSUM",
     createdOn: Date.now(),
     author:"",
-    image: 1,
     summary: "LIDSA",
     body: "LOREM IPSUM DOLOR SIT AMET"   
 };
 
 test('renders component without errors', ()=> {
-    render(<Article key={testArticle.id} article={testArticle} />)
+    render(<Article article={testArticle} />)
 });
 
 test('renders headline, author from the article when passed in through props', ()=> {
 
-    render(<Article key={testArticle.id} article={testArticle}/>)
+    render(<Article article={testArticle}/>)
 
     const tHeadline = screen.getByTestId('headline');
     expect(tHeadline).toBeInTheDocument();
@@ -53,7 +49,7 @@ test('renders headline, author from the article when passed in through props', (
 
 test('renders "Associated Press" when no author is given', ()=> {
 
-    render(<Article key={noAuth.id} article={noAuth}/>)
+    render(<Article article={noAuth} />)
 
     const apAuthor = screen.getByText(/Associated Press/i);
 
