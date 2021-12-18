@@ -28,17 +28,14 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formValues);
 
         axios.post('http://localhost:5000/api/login', formValues)
             .then(resp => {
-                console.log(resp.data.token);
                 localStorage.setItem('token', resp.data.token);
                 setLoginError(false);
                 push('/view');
             })
             .catch(err => {
-                console.log({err});
                 setLoginError(true);
             })
     }
